@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DiretivaNgforComponent implements OnInit {
 
+  cursos = ['Curso 1', 'Curso 2', 'Curso 3'];
+
   constructor() { }
 
   ngOnInit() {
