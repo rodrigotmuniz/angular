@@ -1,0 +1,26 @@
+<!-- <input #campoInput
+(keyup)="onKeyUp(campoInput)"
+(keyup.enter)="valorSalvo = campoInput.value"
+>
+<div>Valor atual: {{ valorAtual }}</div>
+<div>Valor Salvo: {{ valorSalvo }}</div>
+
+<br>
+<span 
+(mouseover)="onMouseOverOut()"
+(mouseout)="onMouseOverOut()"
+[style.display]="isMouseOver ? 'none' : 'block'"
+>
+  Passe o mouse
+</span> -->
+
+<!-- <input type="text" 
+[(ngModel)]="nome"
+> 
+
+<p> Voce digitou: {{ nome }}</p> 
+<app-teste></app-teste> -->
+
+<!-- <app-curso [nome]="nomeDoCurso"></app-curso> -->
+
+<app-output-property [valor]="valorInicial" (mudouValor)="onMudouValor($event)"></app-output-property>
