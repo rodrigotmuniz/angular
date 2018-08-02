@@ -19,9 +19,9 @@ export class OutputPropertyComponent implements OnInit {
     this.mudouValor.emit({valorEmitido: this.valor});
   }
 
-  constructor() { }
+  constructor() { }  
 
-  ngOnInit() {
+  ngOnInit() { 
   }
 
 }
