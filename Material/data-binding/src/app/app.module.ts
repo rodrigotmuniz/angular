@@ -4,21 +4,21 @@ import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { DataBindingComponent } from './data-binding/data-binding.component';
-import { TesteModule } from './teste/teste.module';
 import { InputPropertyComponent } from './input-property/input-property.component';
 import { OutputPropertyComponent } from './output-property/output-property.component';
+import { ViewChildPropertyComponent } from './view-child-property/view-child-property.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DataBindingComponent,
     InputPropertyComponent,
-    OutputPropertyComponent
+    OutputPropertyComponent,
+    ViewChildPropertyComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    TesteModule
   ], 
   providers: [],
   bootstrap: [AppComponent]
