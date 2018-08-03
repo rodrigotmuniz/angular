@@ -1,6 +1,17 @@
 <p fundoAmarelo>
   Texto com fundo amarelo
 </p>
+
 <p highlightMouse>
   Texto com highlight quando o passo o mouse
 </p>
+
+<p [defaultColor]="'blue'" highlight>
+  Texto com highlight com cores customizadas
+</p>
+
+<div class="panel">
+  <h4>Aula *ngElse</h4>
+  <label *ngIf="estrelaCurtida"><a style="cursor: pointer" (click)="mudarEstrela()"><i class="glyphicon glyphicon-star"></i></a></label>
+  <label *ngElse="estrelaCurtida"><a style="cursor: pointer" (click)="mudarEstrela()"><i class="glyphicon glyphicon-star-empty"></i></a></label>
+</div>

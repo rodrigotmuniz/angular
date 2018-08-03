@@ -7,6 +7,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DiretivasCustomizadasComponent implements OnInit {
 
+  estrelaCurtida = false;
+  mudarEstrela() {
+    this.estrelaCurtida = !this.estrelaCurtida;
+  }
+
   constructor() { }
 
   ngOnInit() {
