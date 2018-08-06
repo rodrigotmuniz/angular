@@ -3,21 +3,21 @@
 
     <div class="row">
       <div class="input-field col s12">
-        <input [(ngModel)]="aluno.id"  id="id" type="text" disabled>
+        <input (input)="onInput()" [(ngModel)]="aluno.id"  id="id" type="text" disabled>
         <label for="id">Id</label>
       </div>
     </div>
 
     <div class="row">
       <div class="input-field col s12">
-        <input [(ngModel)]="aluno.nome"  id="nome" type="text" class="validate">
+        <input (input)="onInput()" [(ngModel)]="aluno.nome"  id="nome" type="text" class="validate">
         <label for="nome">Nome</label>
       </div>
     </div>
 
     <div class="row">
       <div class="input-field col s12">
-        <input [(ngModel)]="aluno.email"  id="email" type="email" class="validate">
+        <input (input)="onInput()" [(ngModel)]="aluno.email"  id="email" type="email" class="validate">
         <label for="email">Email</label>
       </div>
     </div>

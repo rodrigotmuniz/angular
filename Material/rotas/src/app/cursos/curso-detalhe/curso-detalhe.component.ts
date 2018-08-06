@@ -32,7 +32,7 @@ export class CursoDetalheComponent implements OnInit {
       this.id = param['id'];
       this.curso = this.cursoService.getCurso(this.id);
       if(!this.curso) {
-        this.router.navigate(['/naoEncontrado']);
+        this.router.navigate(['/cursos/naoEncontrado']);
       }
     })
   }

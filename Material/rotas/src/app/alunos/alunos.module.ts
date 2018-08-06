@@ -7,6 +7,7 @@ import { AlunosComponent } from './alunos.component';
 import { AlunoFormComponent } from './aluno-form/aluno-form.component';
 import { AlunoDetalheComponent } from './aluno-detalhe/aluno-detalhe.component';
 import { AlunosService } from './alunos.service';
+import { AlunosGuard } from '../guards/alunos.guard';
 
 @NgModule({
   imports: [
