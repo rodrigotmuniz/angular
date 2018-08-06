@@ -1,0 +1,26 @@
+<nav>
+  <div class="nav-wrapper">
+    <a routerLink="" class="brand-logo right">Rotas Ng2</a>
+    <ul id="nav-mobile" class="left">
+      <li routerLinkActive="active"><a routerLink="login">Login</a></li>
+      <li routerLinkActive="active"><a routerLink="cursos" [queryParams]="{pagina: 1}">Cursos</a></li>
+      <li routerLinkActive="active"><a routerLink="alunos">Alunos</a></li>
+      <!-- <li routerLinkActive="active"><a routerLink="curso">Curso com Id</a></li> -->
+      <!-- <li routerLinkActive="active"><a [routerLink]="['curso',inputId.value]">Curso com Id</a></li> -->
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <!-- <p>Coloque o ID</p>
+  <input #inputId> -->
+  <router-outlet></router-outlet>
+</div>
+
+
+
+
+
+
+
+
+

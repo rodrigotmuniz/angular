@@ -23,5 +23,3 @@ export class CursosService {
         // this.adicaoCurso.emit(curso);
     }
 } 
-
-continuar na aula 43

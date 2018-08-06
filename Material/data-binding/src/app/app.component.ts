@@ -17,10 +17,7 @@ export class AppComponent  {
 
   ngOnInit() {
     if(this.meuFilho) {
-      setTimeout(() => {
         this.meuFilho.incrementa();
-      }, 500);
-      
     }
   }
 
