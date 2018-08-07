@@ -22,7 +22,6 @@ export class AuthGuard implements CanActivate, CanLoad {
   }
   
   canLoad(route: Route): Observable<boolean> | Promise<boolean> | boolean {
-    console.log('canLoad: verificando se o usuario pode carregar o modulo');
     return this.verificarAcesso();
   }
 

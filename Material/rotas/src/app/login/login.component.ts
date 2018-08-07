@@ -27,11 +27,11 @@ export class LoginComponent implements OnInit {
   }
   
   ngAfterViewChecked() {
-    // setTimeout(() => {
-    //   this.usuario.nome = 'a';
-    //   this.usuario.senha = 'b';
-    //   this.fazerLogin();
-    // }, 500);
+    setTimeout(() => {
+      this.usuario.nome = 'a';
+      this.usuario.senha = 'b';
+      this.fazerLogin();
+    }, 500);
     
   }
   

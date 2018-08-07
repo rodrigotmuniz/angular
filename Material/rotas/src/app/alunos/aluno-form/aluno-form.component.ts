@@ -20,7 +20,7 @@ export class AlunoFormComponent implements OnInit, IFormCanDeactivate {
   }
 
   podeDesativar() {
-    this.podeMudarRota();
+    return this.podeMudarRota();
   }
 
   podeMudarRota() {
