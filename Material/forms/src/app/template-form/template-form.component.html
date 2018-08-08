@@ -1,0 +1,43 @@
+<form #f="ngForm" (ngSubmit)="onSubmit(f, nome, email)" class="form-horizontal">
+  
+  <div class="form-group col-sm-12" [class.has-error]="nome.invalid && nome.touched">
+    <label class="control-label" for="nome">Nome</label>
+    <input #nome="ngModel" ngModel required type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
+    <span *ngIf="nome.invalid && nome.touched" id="helpBlock2" class="help-block">Campo obrigatório</span>
+  </div>
+  
+  <!-- <div class="form-group col-sm-12" [addClassesValidation]="email.invalid && email.touched"> -->
+    <!-- <label for="email">Email</label>
+      <input #email="ngModel" email [ngModel]="usuario.email" type="email" class="form-control" 
+      id="email" name="email" placeholder="nome@email.com" aria-describedby="bla"> -->
+      <!-- <span *ngIf="email.invalid && email.touched" id="helpBlock2" class="help-block">
+        {{ email.value == '' ? 'Campo Obrigatório' : 'Email invalido' }} 
+      </span> -->
+      <!-- <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="false"></span>
+        <span id="bla" class="sr-only">(error)</span>
+      </div> -->
+      
+      <div class="form-group">
+        <div class="col-sm-3">
+          <label for="cep" class="control-label">CEP</label>
+          <input id="cep" name="cep" ngModel required #cep="ngModel" class="form-control" (click)=bla(cep)>
+        </div>
+      </div>
+      
+      <button [disabled]="f.invalid" type="submit" class="btn btn-primary">Submit</button>
+      
+      <div class="form-group" [addClassesValidation]="email.invalid && email.touched">
+        <label class="control-label" for="email">Input with error</label>
+        <input #email="ngModel" email [ngModel]="usuario.email" type="email" class="form-control" id="email" name="email">
+        <span *ngValidation class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+        <span *ngValidation id="helpBlock2" class="help-block">
+          {{ email.value == '' ? 'Campo Obrigatório' : 'Email invalido' }} 
+        </span>
+      </div>
+      
+    </form> 
+    <app-form-debug [form]="f"></app-form-debug>
+
+    metade da aula 82
+    
+    

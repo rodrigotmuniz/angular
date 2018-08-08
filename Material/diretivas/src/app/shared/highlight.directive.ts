@@ -11,7 +11,7 @@ export class HighlightDirective {
   //================================================
 
   @Input() defaultColor = 'white';
-  @Input() highlightColor = 'yellow';
+  @Input() highlightColor = 'pink';
   
   @HostBinding('style.backgroundColor') color;
   
