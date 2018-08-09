@@ -5,8 +5,6 @@
   <div [formValidation]="nome.invalid && nome.touched" [touched]="nome.touched">
     <label class="control-label" for="nome">Nome</label>
     <input #nome="ngModel" ngModel required type="text" class="form-control" id="nome" name="nome" placeholder="Nome">
-    <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
-    <!-- <span class="help-block">Campo obrigatório</span> -->
   </div> 
   
   <div [formValidation]="email.invalid && email.touched"> 
