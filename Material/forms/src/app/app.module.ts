@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpModule } from '@angular/http';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -19,6 +20,7 @@ import { TemplateFormModule } from './template-form/template-form.module';
     AppRoutingModule,
     FormsModule,
     TemplateFormModule,
+    HttpModule
   ],
   providers: [],
   bootstrap: [AppComponent]

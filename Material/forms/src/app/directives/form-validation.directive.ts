@@ -1,59 +1,108 @@
-import { Directive, HostBinding, Input, Renderer, ElementRef, Renderer2 } from '@angular/core';
+import { Directive, HostBinding, Input, Renderer, ElementRef, Renderer2, ViewChild, Output, HostListener } from '@angular/core';
+import { tokenKey } from '../../../node_modules/@angular/core/src/view';
+import { NgModel } from '../../../node_modules/@angular/forms';
 
 @Directive({
   selector: '[formValidation]'
 })
 export class FormValidationDirective {
-
-  messageElement;
-  iconElement;
   
-  @Input() touched = false;
-  @HostBinding('class') classes = 'form-group col-sm-12';
+  errorIcon;
+  successIcon;
+  errorMessage;
+  errorMessageValue;
   
-  @Input() set formValidation(condition) {
-    if(condition && this.touched) {
-      this.classes = 'form-group col-sm-12 has-error has-feedback';
-      this.renderer.setStyle(this.messageElement, 'display', 'block');
-      this.renderer.setStyle(this.iconElement, 'display', 'block')
-    }
-    else {
-      this.classes = this.touched ? 'form-group col-sm-12 has-success has-feedback' : 'form-group col-sm-12';
-      this.messageElement ? this.renderer.setStyle(this.messageElement, 'display', 'none') : null;
-      this.iconElement ? this.renderer.setStyle(this.iconElement, 'display', 'none') : null;
-    }
-  };
+  @Input() class;
+  @Input() validationMessage;
+  @Input() emptyMessage;
+  @Input() formValidation;
+  @Input() useIcon;
+  
+  @HostBinding('class') classes;
   
   constructor(
     private el: ElementRef,
     private renderer: Renderer2
-  ) { 
-  }
+  ) { }
   
   ngOnInit() {
-    
-  }
-  ngAfterContentInit() {
-    this.initializeIconElement();
-    this.initializeMessageElement();
-  }
-
-  initializeMessageElement() {
-    this.messageElement = this.renderer.createElement('messageElement');
-    this.renderer.addClass(this.messageElement, 'help-block');
-    const text = this.renderer.createText('Campo obrigatóriosss');
-    this.renderer.appendChild(this.messageElement, text);
-    this.renderer.appendChild(this.el.nativeElement, this.messageElement);
-    this.renderer.setStyle(this.messageElement, 'display', 'none')
-  }
-
-  initializeIconElement() {
-    this.iconElement = this.renderer.createElement('messageElement');
-    this.renderer.addClass(this.iconElement, 'glyphicon');
-    this.renderer.addClass(this.iconElement, 'glyphicon-remove');
-    this.renderer.addClass(this.iconElement, 'form-control-feedback');
-    this.renderer.appendChild(this.el.nativeElement, this.iconElement);
-    this.renderer.setStyle(this.iconElement, 'display', 'none')
+    this.initializeErrorMessage();
+    this.initializeErrorMessageValue();
+    this.initializeIcons();
   }
   
+  initializeErrorMessage() {
+    this.errorMessage = this.renderer.createElement('div');
+    this.renderer.addClass(this.errorMessage, 'help-block');
+    if (!this.emptyMessage) {
+      this.emptyMessage = this.validationMessage;
+    }
+  }
+
+  initializeErrorMessageValue() {
+    this.errorMessageValue = this.renderer.createText('Error Message');
+  }
+  
+  initializeIcons() {
+    this.successIcon = this.initializeIcon('glyphicon-ok');
+    this.errorIcon = this.initializeIcon('glyphicon-remove');
+  }
+
+  initializeIcon(glyphicon) {
+    if(this.useIcon) {
+      let icon = this.renderer.createElement('span');
+      this.renderer.addClass(icon, 'glyphicon');
+      this.renderer.addClass(icon, glyphicon);
+      this.renderer.addClass(icon, 'form-control-feedback');
+      this.renderer.setStyle(icon, 'text-align', 'inherit');
+      return icon;
+    }
+  }
+  
+  ngDoCheck() {
+    this.classes = this.class ? this.class : '';
+    if(this.formValidation.invalid && this.formValidation.touched) {
+      this.classes += ' has-error has-feedback';
+      this.renderErrorView();
+      
+      if (this.formValidation.value == '') {
+        this.renderer.setValue(this.errorMessageValue, this.emptyMessage);
+      }
+      else {
+        this.renderer.setValue(this.errorMessageValue, this.validationMessage);
+      }
+    }
+    else if (this.formValidation.touched) {
+      this.classes += ' has-success has-feedback';
+      this.renderSuccessView();
+    } 
+  }
+
+  renderErrorView() {
+    this.renderer.appendChild(this.errorMessage, this.errorMessageValue);
+    this.renderer.appendChild(this.el.nativeElement, this.errorMessage);
+
+    if(this.useIcon) {
+      this.renderer.appendChild(this.el.nativeElement, this.errorIcon);
+    }
+
+    if (this.useIcon && this.renderer.parentNode(this.successIcon)) {
+      this.renderer.removeChild(this.el.nativeElement, this.successIcon);
+    }
+  }
+
+  renderSuccessView() {
+    if (this.renderer.parentNode(this.errorMessage)) {
+      this.renderer.removeChild(this.el.nativeElement, this.errorMessage);
+    }
+
+    if (this.useIcon && this.renderer.parentNode(this.errorIcon)) {
+      this.renderer.removeChild(this.el.nativeElement, this.errorIcon);
+    }
+
+    if(this.useIcon) {
+      this.renderer.appendChild(this.el.nativeElement, this.successIcon);
+    }
+  }
+
 }
