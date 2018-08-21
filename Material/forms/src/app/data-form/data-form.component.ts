@@ -14,12 +14,12 @@ export class DataFormComponent implements OnInit {
 
   ngOnInit() {
     // this.formulario = new FormGroup({
-    //   nome: new FormControl(),
-    //   email: new FormControl()
+    //   nome: new FormControl(null),
+    //   email: new FormControl(null)
     // });
     this.formulario = this.formBuilder.group({
-      nome: [],
-      email: []
+      nome: [null],
+      email: [null]
     })
   }
 

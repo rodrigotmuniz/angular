@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import { TemplateFormRoutingModule } from './template-form-routing.module';
 import { TemplateFormComponent } from './template-form.component';
-import { FormDebugModule } from '../form-debug/form-debug.module';
 import { FormValidationDirective } from '../directives/form-validation.directive';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -13,8 +13,7 @@ import { FormValidationDirective } from '../directives/form-validation.directive
     CommonModule,
     TemplateFormRoutingModule,
     FormsModule,
-    FormDebugModule,
-    
+    SharedModule
   ],
   declarations: [
     TemplateFormComponent,
