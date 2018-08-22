@@ -18,9 +18,10 @@ export class TemplateFormComponent implements OnInit {
 
   onSubmit(form, nome, email) {
     console.log(`Template modificado: ${form.dirty}`);
-    console.log(form);
-    console.log(nome);
-    console.log(email);
+    // console.log(form);
+    // console.log(nome);
+    // console.log(email);
+    form.form.reset();
   }
 
   OnCepBlur(cep: string, form) {
@@ -57,6 +58,29 @@ export class TemplateFormComponent implements OnInit {
   constructor(private http: Http) { }
 
   ngOnInit() {
+  //   console.log('template: ngOnInit');
   }
+  // ngOnDestroy() {
+  //   console.log('template: ngOnDestroy');
+  // }
+  // ngOnChanges() {
+  //   console.log('template: ngOnChanges');
+  // }
+  // ngDoCheck() {
+  //   console.log('template: ngDoCheck');
+  // }
+  // ngAfterViewInit() {
+  //   console.log('template: ngAfterViewInit');
+  // }
+  // ngAfterViewChecked() {
+  //   console.log('template: ngAfterViewChecked');
+  // }
+  // ngAfterContentInit() {
+  //   console.log('template: ngAfterContentInit');
+  // }
+  // ngAfterContentChecked() {
+  //   console.log('template: ngAfterContentChecked');
+  // }
+
 
 }

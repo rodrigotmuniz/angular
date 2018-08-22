@@ -1,28 +1,31 @@
-<form class="form-horizontal" [formGroup]="formulario">
-
-  <div class="form-group">
+<form class="form-horizontal" [formGroup]="formulario" (ngSubmit)="onSubmit()">
+  
+  <div class="form-group" [ngClass]="aplicaCssErro('nome')">
     <div class="col-sm-12">
       <label class="control-label" for="nome">Nome</label>
     </div>
-    <div class="col-sm-12>">
+    <div class="col-sm-12">
       <input type="text" class="form-control" id="nome" formControlName="nome" placeholder="Nome">
+      <app-campo-control-erro [msgErro]="'Nome Invalido'" [mostrarErro]="verificaValidTouched('nome')">
+      </app-campo-control-erro>
     </div>
   </div>
-
-  <div class="form-group">
+  
+  <div class="form-group" [ngClass]="aplicaCssErro('email')">
     <div class="col-sm-12">
       <label class="control-label" for="email">Email</label>
     </div>
-    <div class="col-sm-12>">
+    <div class="col-sm-12">
       <input type="email" class="form-control" id="email" formControlName="email" placeholder="email@email.com">
+      <app-campo-control-erro [msgErro]="verificaEmail()" [mostrarErro]="verificaValidTouched('email')">
+      </app-campo-control-erro>
     </div>
   </div>
-
+  
   <button type="submit" class="btn btn-primary">Submit</button>
-
+  <button class="btn btn-secondary" (click)="resetar()">Cancelar</button>
+  
 </form>
 
 <app-form-debug [form]="formulario"></app-form-debug>
 
-
-CONTINUAR NA AULA 92
