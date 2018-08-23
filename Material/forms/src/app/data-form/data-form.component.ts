@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Response } from '@angular/http';
 import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
 
 import { EstadoBr } from '../shared/models/estado';
 import { DropdownService } from '../shared/services/dropdown.service';
+import { ConsultaCepService } from '../shared/services/consulta-cep.service';
+
 
 
 @Component({
@@ -18,8 +21,9 @@ export class DataFormComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private http: Http,
-    private dropdownService: DropdownService
+    private http: HttpClient,
+    private dropdownService: DropdownService,
+    private cepService: ConsultaCepService
   ) { }
 
   ngOnInit() {
@@ -45,7 +49,7 @@ export class DataFormComponent implements OnInit {
     });
 
 
-  } 
+  }
 
   onSubmit() {
     if (this.formulario.valid) {
@@ -102,19 +106,25 @@ export class DataFormComponent implements OnInit {
   }
 
   OnCepBlur() {
-    let cep = this.formulario.get('endereco.cep').value;
-    if (cep) {
-      cep = cep.replace(/\D/g, '');
-      const regExCepValido = /[0-9]{8}/;
-      let cepValido = regExCepValido.test(cep);
-      if (cepValido) {
-        this.resetarEndereco();
-        this.http.get(`https://viacep.com.br/ws/${cep}/json`).subscribe(resp => {
-          this.popularEndereco(resp.json());
-        })
-      }
+    // let cep = this.formulario.get('endereco.cep').value;
+    // if (cep) {
+    //   cep = cep.replace(/\D/g, '');
+    //   const regExCepValido = /[0-9]{8}/;
+    //   let cepValido = regExCepValido.test(cep);
+    //   if (cepValido) {
+    //     this.resetarEndereco();
+    //     this.http.get(`https://viacep.com.br/ws/${cep}/json`).subscribe(resp => {
+    //       this.popularEndereco(resp);
+    //     })
+    //   }
+    // }
+    const cep = this.formulario.get('endereco.cep').value;
+    if (cep != null && cep !== '') {
+      this.cepService.consultaCep(cep).subscribe(resp => {
+        this.popularEndereco(resp);
+      })
     }
-
+    
   }
 
   popularEndereco(dados) {

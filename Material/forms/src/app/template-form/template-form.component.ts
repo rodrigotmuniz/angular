@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgModel, NgForm, FormGroup } from '../../../node_modules/@angular/forms';
-import { Http, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HttpClient } from '@angular/common/http';
+import { ConsultaCepService } from '../shared/services/consulta-cep.service';
+
 
 @Component({
   selector: 'app-template-form',
@@ -30,12 +31,14 @@ export class TemplateFormComponent implements OnInit {
     const regExCepValido = /[0-9]{8}/;
     let cepValido = regExCepValido.test(cep);
     if (cepValido) {
-      this.http.get(`https://viacep.com.br/ws/${cep}/json`).subscribe(resp => {
-        this.popularEndereco(form, resp.json());
+      this.cepService.consultaCep(cep).subscribe(resp => {
+        this.popularEndereco(form, resp);
       })
     }
+
   }
 
+  constinuar na aula 102
   popularEndereco(form, endereco) {
     console.log(form)
     form.form.patchValue({
@@ -55,7 +58,7 @@ export class TemplateFormComponent implements OnInit {
   }
 
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient, private cepService: ConsultaCepService) { }
 
   ngOnInit() {
   //   console.log('template: ngOnInit');
