@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { EstadoBr } from '../shared/models/estado';
 import { DropdownService } from '../shared/services/dropdown.service';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
+import { Observable } from 'rxjs';
 
 
 
@@ -17,7 +18,8 @@ import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 export class DataFormComponent implements OnInit {
 
   formulario: FormGroup;
-  estados: EstadoBr[];
+  estados: Observable<EstadoBr[]>;
+  cargos;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,7 +29,8 @@ export class DataFormComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.dropdownService.getEstadosBr().subscribe(dados => console.log(dados));
+    this.estados = this.dropdownService.getEstadosBr();
+    this.cargos = this.dropdownService.getCargos();
     // this.formulario = new FormGroup({
     //   nome: new FormControl(null),
     //   email: new FormControl(null)
@@ -45,7 +48,8 @@ export class DataFormComponent implements OnInit {
         bairro: [null, Validators.required],
         cidade: [null, Validators.required],
         estado: [null, Validators.required]
-      })
+      }),
+      cargo: [null]
     });
 
 
@@ -101,7 +105,6 @@ export class DataFormComponent implements OnInit {
       if (campoEmail.getError('email')) {
         return 'Email invalido';
       }
-
     }
   }
 
@@ -152,6 +155,17 @@ export class DataFormComponent implements OnInit {
         numero: null
       }
     })
+  }
+
+  CONTINUAR NA AULA 104
+
+  setarCargo() {
+    const cargo = { nome: 'Dev', nivel: 'Pleno', desc: 'Dev Pl' };
+    this.formulario.get('cargo').setValue(cargo);
+  }
+
+  compararCargos(obj1, obj2) {
+    return obj1 && obj2 ? (obj1.nivel === obj2.nivel && obj1.desc === obj2.desc) : obj1 === obj2;
   }
 
   // ngOnDestroy() {
