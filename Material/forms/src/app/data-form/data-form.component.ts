@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
-import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 
 import { EstadoBr } from '../shared/models/estado';
@@ -20,6 +20,10 @@ export class DataFormComponent implements OnInit {
   formulario: FormGroup;
   estados: Observable<EstadoBr[]>;
   cargos;
+  tecnologias;
+  newsletterOp;
+  termos;
+  frameworks = ['Angular', 'Reack', 'Spring', 'Hibernate'];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -31,6 +35,10 @@ export class DataFormComponent implements OnInit {
   ngOnInit() {
     this.estados = this.dropdownService.getEstadosBr();
     this.cargos = this.dropdownService.getCargos();
+    this.tecnologias = this.dropdownService.getTecnologias();
+    this.newsletterOp = this.dropdownService.getNewsletter();
+
+    // this.frameworks = this.dropdownService.getFrameworks();
     // this.formulario = new FormGroup({
     //   nome: new FormControl(null),
     //   email: new FormControl(null)
@@ -49,15 +57,25 @@ export class DataFormComponent implements OnInit {
         cidade: [null, Validators.required],
         estado: [null, Validators.required]
       }),
-      cargo: [null]
+      cargo: [null],
+      tecnologias: null,
+      newsletter: 'n',
+      termos: [null, Validators.requiredTrue],
+      frameworks: this.buildFrameworks()
     });
 
 
   }
 
   onSubmit() {
+    let formCopy = Object.assign({}, this.formulario.value);
+    formCopy.frameworks = formCopy.frameworks
+      .map((v, i) => v ? this.frameworks[i] : null)
+      .filter(v => v != null);
+    console.log(this.formulario)
+
     if (this.formulario.valid) {
-      this.http.post('https://httpbin.org/post', this.formulario.value)
+      this.http.post('https://httpbin.org/post', formCopy)
         .subscribe(
           (resp: Response) => {
             console.log(resp);
@@ -68,6 +86,7 @@ export class DataFormComponent implements OnInit {
     }
     else {
       this.verificarValidacoesForm(this.formulario);
+      console.log(this.formulario.get('termos'))
     }
   }
 
@@ -127,7 +146,7 @@ export class DataFormComponent implements OnInit {
         this.popularEndereco(resp);
       })
     }
-    
+
   }
 
   popularEndereco(dados) {
@@ -157,16 +176,36 @@ export class DataFormComponent implements OnInit {
     })
   }
 
-  CONTINUAR NA AULA 104
 
   setarCargo() {
     const cargo = { nome: 'Dev', nivel: 'Pleno', desc: 'Dev Pl' };
     this.formulario.get('cargo').setValue(cargo);
   }
 
+  setarTecnologias() {
+    this.formulario.get('tecnologias').setValue(['ruby', 'java']);
+  }
+
   compararCargos(obj1, obj2) {
     return obj1 && obj2 ? (obj1.nivel === obj2.nivel && obj1.desc === obj2.desc) : obj1 === obj2;
   }
+
+  buildFrameworks() {
+    const values = this.frameworks.map(v => new FormControl(false));
+    return this.formBuilder.array(values, this.requiredMinCheckBox(1))
+  }
+
+  requiredMinCheckBox(min = 1) {
+    const validator = (formArray: FormArray) => {
+      const totalChecked = formArray.controls
+        .map(v => v.value)
+        .reduce((prev, curr) => curr ? prev++ : prev, 0);
+      return totalChecked >= min ? null : { required: true };
+    };
+    return validator;
+  }
+
+
 
   // ngOnDestroy() {
   //   console.log('data: ngOnDestroy');

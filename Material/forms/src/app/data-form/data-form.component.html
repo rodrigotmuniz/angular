@@ -90,7 +90,7 @@
   </div>
 
   <div class="form-group">
-    <div class="col-md-3" [ngClass]="aplicaCssErro('cargo')">
+    <div class="col-md-4" [ngClass]="aplicaCssErro('cargo')">
       <label for="cargo" class="control-label">Cargo</label>
       <select class="form-control" id="cargo" formControlName="cargo" [compareWith]="compararCargos">
         <option *ngFor="let cargo of cargos" [ngValue]="cargo">{{ cargo.desc }}</option>
@@ -98,11 +98,57 @@
       <app-campo-control-erro [mostrarErro]="verificaValidTouched('cargo')" msgErro="cargo é obrigatório.">
       </app-campo-control-erro>
     </div>
+
+    <div class="col-md-4" [ngClass]="aplicaCssErro('tecnologias')">
+      <label for="tecnologias" class="control-label">Tecnologias</label>
+      <select multiple class="form-control" id="tecnologias" formControlName="tecnologias">
+        <option *ngFor="let tecnologia of tecnologias" [ngValue]="tecnologia.nome">{{ tecnologia.desc }}</option>
+      </select>
+      <app-campo-control-erro [mostrarErro]="verificaValidTouched('tecnologias')" msgErro="tecnologias é obrigatório.">
+      </app-campo-control-erro>
+    </div>
+
+    <div class="col-md-4" [ngClass]="aplicaCssErro('newsletter')">
+      <label for="newsletter" class="control-label">Newsletter</label>
+      <div id="newsletter" class="row">
+        <label *ngFor="let newsletter of newsletterOp" class="radio-inline">
+          <input type="radio" formControlName="newsletter" [value]="newsletter.valor"> {{ newsletter.desc }}
+        </label>
+      </div>
+    </div>
   </div>
 
+  <div class="form-group">
+    <div class="col-md-3" [ngClass]="aplicaCssErro('termos')">
+      <div class="checkbox">
+        <label class="checkbox-inline">
+          <input type="checkbox" formControlName="termos"> Aceito os termos.
+        </label>
+        <app-campo-control-erro [mostrarErro]="verificaValidTouched('termos')" msgErro="termos é obrigatório.">
+        </app-campo-control-erro>
+      </div>
+    </div>
+
+    <div class="col-md-3" [ngClass]="aplicaCssErro('frameworks')">
+      <label for="frameworks">Frameworks</label>
+      <div id="frameworks" class="row">
+        <div class="checkbox col-sm-3" formArrayName="frameworks" *ngFor="let item of formulario.get('frameworks').controls; let i = index">
+          <label class="checkbox-inline"  >
+            <input type="checkbox" [formControlName]="i"> {{ frameworks[i] }}
+          </label>
+          <app-campo-control-erro [mostrarErro]="!formulario.get('frameworks').valid" msgErro="selecione uma opçao.">
+            </app-campo-control-erro>
+        </div>
+      </div> 
+    </div>
+  </div>
+
+
+  AULA 108
   <button type="submit" class="btn btn-primary">Submit</button>
   <button class="btn btn-secondary" (click)="resetar()">Cancelar</button>
   <button class="btn btn-warning" (click)="setarCargo()">Cargo</button>
+  <button class="btn btn-info" (click)="setarTecnologias()">Tecnologias</button>
 
 </form>
 

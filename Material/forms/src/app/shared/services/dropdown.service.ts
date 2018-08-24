@@ -19,4 +19,30 @@ export class DropdownService {
     ]
   }
 
+  getTecnologias() {
+    return [
+      { nome: "java", desc: "Java" },
+      { nome: "javascript", desc: "JavaScript" },
+      { nome: "php", desc: "PHP" },
+      { nome: "ruby", desc: "Ruby" },
+    ]
+  }
+
+  getNewsletter() {
+    return [
+      { valor: 's', desc: 'Sim' },
+      { valor: 'n', desc: 'Não' }
+    ]
+  }
+
+  getFrameworks() {
+    return [
+      { nome: "angular", desc: "Angular" },
+      { nome: "spring", desc: "Spring" },
+      { nome: "hibernate", desc: "Hibernate" }
+    ]
+  }
+
+  
+
 }
