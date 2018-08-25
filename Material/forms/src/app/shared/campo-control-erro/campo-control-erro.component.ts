@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-campo-control-erro',
+  selector: 'valid-error-msg',
   templateUrl: './campo-control-erro.component.html',
   styleUrls: ['./campo-control-erro.component.css']
 })
