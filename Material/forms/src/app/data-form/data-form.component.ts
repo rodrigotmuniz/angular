@@ -7,6 +7,9 @@ import { EstadoBr } from '../shared/models/estado';
 import { DropdownService } from '../shared/services/dropdown.service';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
 import { Observable } from 'rxjs';
+import { FormValidations } from '../shared/services/form-validations';
+import { VerificaEmailService } from './services/verifica-email.service';
+import { map } from 'rxjs/operators';
 
 
 
@@ -29,7 +32,8 @@ export class DataFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private http: HttpClient,
     private dropdownService: DropdownService,
-    private cepService: ConsultaCepService
+    private cepService: ConsultaCepService,
+    private verificaEmailService: VerificaEmailService
   ) { }
 
   ngOnInit() {
@@ -46,10 +50,10 @@ export class DataFormComponent implements OnInit {
     // console.log('data: ngOnInit');
     this.formulario = this.formBuilder.group({
       nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
-      email: [null, [Validators.required, Validators.email]],
-
+      email: [null, [Validators.required, Validators.email], [this.validarEmail.bind(this)]],
+      confirmarEmail: [null, [Validators.required, Validators.email, FormValidations.equalsTo('email')]],
       endereco: this.formBuilder.group({
-        cep: [null, Validators.required],
+        cep: [null, [Validators.required, FormValidations.cepValidator]],
         numero: [null, Validators.required],
         complemento: [null],
         rua: [null, Validators.required],
@@ -115,15 +119,13 @@ export class DataFormComponent implements OnInit {
     return !this.formulario.get(campo).valid && this.formulario.get(campo).touched;
   }
 
-  verificaEmail() {
-    let campoEmail: AbstractControl = this.formulario.get('email');
+  mgsErroEmail(formControlName: string) {
+    let campoEmail: AbstractControl = this.formulario.get(formControlName);
     if (campoEmail.errors) {
-      if (campoEmail.getError('required')) {
-        return 'Email obrigatorio';
-      }
-      if (campoEmail.getError('email')) {
-        return 'Email invalido';
-      }
+      if (campoEmail.getError('required')) { return 'Email obrigatorio'; }
+      if (campoEmail.getError('email')) { return 'Email invalido'; }
+      if (campoEmail.getError('notEqualsTo')) { return 'Emails não correspondem'; }
+      if (campoEmail.getError('emailExistente')) { return 'Emails existente'; }
     }
   }
 
@@ -140,8 +142,10 @@ export class DataFormComponent implements OnInit {
     //     })
     //   }
     // }
-    const cep = this.formulario.get('endereco.cep').value;
-    if (cep != null && cep !== '') {
+
+
+    if (this.formulario.get('endereco.cep').valid) {
+      const cep = this.formulario.get('endereco.cep').value;
       this.cepService.consultaCep(cep).subscribe(resp => {
         this.popularEndereco(resp);
       })
@@ -192,18 +196,22 @@ export class DataFormComponent implements OnInit {
 
   buildFrameworks() {
     const values = this.frameworks.map(v => new FormControl(false));
-    return this.formBuilder.array(values, this.requiredMinCheckBox(1))
+    return this.formBuilder.array(values, FormValidations.requiredMinCheckBox(1))
   }
 
-  requiredMinCheckBox(min = 1) {
-    const validator = (formArray: FormArray) => {
-      const totalChecked = formArray.controls
-        .map(v => v.value)
-        .reduce((prev, curr) => curr ? prev++ : prev, 0);
-      return totalChecked >= min ? null : { required: true };
-    };
-    return validator;
+  msgErrorCep() {
+    const cepControl = this.formulario.get('endereco.cep');
+    if (cepControl.hasError('required')) { return 'CEP é obrigatório'; };
+    if (cepControl.hasError('cepInvalido')) { return 'CEP inválido'; };
   }
+
+  validarEmail(formControl: FormControl) {
+    return this.verificaEmailService.verificaEmail(formControl.value).pipe(
+      map(res => res ? { emailExistente: true } : null)
+    )
+  }
+
+
 
 
 
@@ -228,6 +236,11 @@ export class DataFormComponent implements OnInit {
   // ngAfterContentChecked() {
   //   console.log('data: ngAfterContentChecked');
   // }
+
+  ngAfterContentChecked() {
+    // console.log(this.formulario.get('confirmarEmail'))
+    this.validarEmail
+  }
 
 
 
