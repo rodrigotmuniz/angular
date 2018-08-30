@@ -1,4 +1,5 @@
 import { FormArray, FormControl } from "@angular/forms";
+import { StringifyOptions } from "querystring";
 
 export class FormValidations {
     static requiredMinCheckBox(min = 1) {
@@ -21,5 +22,16 @@ export class FormValidations {
             return cepValido ? null : error;
         }
         return error;
+    }
+
+    static getErrorMessage(errorPropertyName: string, label: string, validatorValue?: any): string {
+        const config = {
+            required: `${label} é obrigatório.`,
+            minlength: `Necessário mais de ${validatorValue.requiredLength} caracteres. Digitado: ${validatorValue.actualLength}`,
+            maxlength: `Necessário menos de ${validatorValue.requiredLength} caracteres. Digitado: ${validatorValue.actualLength}`,
+            cepValido: `CEP Inválido`,
+            
+        }
+        return config[errorPropertyName];
     }
 }

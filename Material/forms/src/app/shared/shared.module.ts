@@ -4,6 +4,7 @@ import { FormDebugModule } from './form-debug/form-debug.module';
 import { FormDebugComponent } from './form-debug/form-debug.component';
 import { CampoControlErroComponent } from './campo-control-erro/campo-control-erro.component';
 import { DropdownService } from './services/dropdown.service';
+import { ErrorMsgComponent } from './error-msg/error-msg.component';
 
 @NgModule({
   imports: [
@@ -12,9 +13,10 @@ import { DropdownService } from './services/dropdown.service';
   ],
   exports: [
     FormDebugComponent,
-    CampoControlErroComponent
+    CampoControlErroComponent,
+    ErrorMsgComponent
   ],
-  declarations: [CampoControlErroComponent],
+  declarations: [CampoControlErroComponent, ErrorMsgComponent],
   providers: [DropdownService]
 })
 export class SharedModule { }

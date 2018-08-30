@@ -14,13 +14,13 @@ export class VerificaEmailService {
   verificaEmail(email: string) {
     return this.http.get('/assets/dados/verificarEmail.json').pipe(
       delay(2000),
-      tap(console.log),
-      map(obj => obj.listaEmails),
-      tap(console.log),
+      // tap(console.log),
+      map((obj: { listaEmails: string }) => obj.listaEmails),
+      // tap(console.log),
       map((obj: { email: string }[] )=> obj.filter(e => e.email == email)),
-      tap(console.log),
+      // tap(console.log),
       map(obj => obj.length > 0),
-      tap(console.log)
+      // tap(console.log)
     );
   }
 
