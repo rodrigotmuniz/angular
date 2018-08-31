@@ -75,14 +75,10 @@ export class DataFormComponent implements OnInit {
       tap(status => console.log(status)),
       distinctUntilChanged(),
       switchMap(status => status === 'VALID' ? this.cepService.consultaCep(this.formulario.get('endereco.cep').value) : empty())
-
-
-    ).subscribe(resp => {
-      this.popularEndereco(resp);
-    });
+    ).subscribe(resp => this.popularEndereco(resp));
   }
 
-  onSubmit() {
+  onSubmit() { 
     let formCopy = Object.assign({}, this.formulario.value);
     formCopy.frameworks = formCopy.frameworks
       .map((v, i) => v ? this.frameworks[i] : null)
