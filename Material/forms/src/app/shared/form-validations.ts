@@ -1,5 +1,4 @@
-import { FormArray, FormControl } from "@angular/forms";
-import { StringifyOptions } from "querystring";
+import { FormArray, FormControl } from '@angular/forms';
 
 export class FormValidations {
     static requiredMinCheckBox(min = 1) {
@@ -17,8 +16,8 @@ export class FormValidations {
         const error = { cepInvalido: true };
         if (cep && cep !== '') {
             const cepPattern =  /^[0-9]{5}-?[0-9]{3}$/;
-            let cepValido = cepPattern.test(cep);
-            console.log('CEP VALIDO: ' + cepValido)
+            const cepValido = cepPattern.test(cep);
+            console.log('CEP VALIDO: ' + cepValido);
             return cepValido ? null : error;
         }
         return error;
@@ -30,8 +29,7 @@ export class FormValidations {
             minlength: `Necessário mais de ${validatorValue.requiredLength} caracteres. Digitado: ${validatorValue.actualLength}`,
             maxlength: `Necessário menos de ${validatorValue.requiredLength} caracteres. Digitado: ${validatorValue.actualLength}`,
             cepValido: `CEP Inválido`,
-            
-        }
+        };
         return config[errorPropertyName];
     }
 }

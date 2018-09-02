@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Response } from '@angular/http';
-import { FormGroup, FormControl, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
+import { FormControl, FormBuilder, Validators, AbstractControl, FormArray, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+
+import { Observable, empty } from 'rxjs';
+import { map, tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
 
 
 import { EstadoBr } from '../shared/models/estado';
 import { DropdownService } from '../shared/services/dropdown.service';
 import { ConsultaCepService } from '../shared/services/consulta-cep.service';
-import { Observable, empty } from 'rxjs';
 import { FormValidations } from '../shared/services/form-validations';
 import { VerificaEmailService } from './services/verifica-email.service';
-import { map, tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { BaseFormComponent } from '../shared/base-form/base-form.component';
+import { Cidade } from '../shared/models/cidade';
 
 
 
@@ -19,10 +22,11 @@ import { map, tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
   templateUrl: './data-form.component.html',
   styleUrls: ['./data-form.component.css']
 })
-export class DataFormComponent implements OnInit {
+export class DataFormComponent extends BaseFormComponent implements OnInit {
 
-  formulario: FormGroup;
-  estados: Observable<EstadoBr[]>;
+  // estados: Observable<EstadoBr[]>;
+  estados: EstadoBr[];
+  cidades: Cidade[];
   cargos;
   tecnologias;
   newsletterOp;
@@ -37,10 +41,13 @@ export class DataFormComponent implements OnInit {
     private dropdownService: DropdownService,
     private cepService: ConsultaCepService,
     private verificaEmailService: VerificaEmailService
-  ) { }
+  ) {
+    super();
+  }
 
   ngOnInit() {
-    this.estados = this.dropdownService.getEstadosBr();
+    // this.estados = this.dropdownService.getEstadosBr();
+    this.dropdownService.getEstadosBr().subscribe(estados => this.estados = estados);
     this.cargos = this.dropdownService.getCargos();
     this.tecnologias = this.dropdownService.getTecnologias();
     this.newsletterOp = this.dropdownService.getNewsletter();
@@ -71,83 +78,63 @@ export class DataFormComponent implements OnInit {
       frameworks: this.buildFrameworks()
     });
 
-    this.formulario.get('endereco.cep').statusChanges.pipe(
+    this.getCampo('endereco.cep').statusChanges.pipe(
       tap(status => console.log(status)),
       distinctUntilChanged(),
-      switchMap(status => status === 'VALID' ? this.cepService.consultaCep(this.formulario.get('endereco.cep').value) : empty())
+      switchMap(status => status === 'VALID' ? this.cepService.consultaCep(this.getCampo('endereco.cep').value) : empty())
     ).subscribe(resp => this.popularEndereco(resp));
+
+    this.getCampo('endereco.estado').valueChanges.pipe(
+      map(estadoSigla => this.estados.filter(estado => estado.sigla === estadoSigla)),
+      map((estados: EstadoBr[]) => estados && estados.length > 0 ? estados[0].id : empty()),
+      switchMap((estadoId: number) => this.dropdownService.getCidades(estadoId))
+    ).subscribe(cidades => this.cidades = cidades);
   }
 
-  onSubmit() { 
-    let formCopy = Object.assign({}, this.formulario.value);
+  submit() {
+    const formCopy = Object.assign({}, this.formulario.value);
     formCopy.frameworks = formCopy.frameworks
       .map((v, i) => v ? this.frameworks[i] : null)
       .filter(v => v != null);
-    console.log(this.formulario)
+    console.log(this.formulario);
 
-    if (this.formulario.valid) {
-      this.http.post('https://httpbin.org/post', formCopy)
-        .subscribe(
-          (resp: Response) => {
-            console.log(resp);
-            this.formulario.reset();
-          },
-          (error: any) => console.log('ERROR')
-        );
-    }
-    else {
-      this.verificarValidacoesForm(this.formulario);
-      console.log(this.formulario.get('termos'))
-    }
+    this.http.post('https://httpbin.org/post', formCopy)
+      .subscribe(
+        (resp: Response) => {
+          console.log(resp);
+          this.formulario.reset();
+        },
+        (error: any) => console.log('ERROR')
+      );
   }
 
-  verificarValidacoesForm(formGroup: FormGroup) {
-    Object.keys(formGroup.controls).forEach(campo => {
-      const controle = formGroup.get(campo);
-      controle.markAsTouched();
-      if (controle instanceof FormGroup) {
-        this.verificarValidacoesForm(controle);
-      }
-    });
-  }
 
-  resetar() {
-    this.formulario.reset();
-  }
 
-  aplicaCssErro(campo: string) {
-    return {
-      'has-error': !this.formulario.get(campo).valid && this.formulario.get(campo).touched,
-      'has-feedback': !this.formulario.get(campo).valid && this.formulario.get(campo).touched,
-      'has-success': this.formulario.get(campo).valid && this.formulario.get(campo).touched
-    };
-  }
 
-  verificaValidTouched(campo: string) {
-    return !this.formulario.get(campo).valid && this.formulario.get(campo).touched;
-  }
+
+
 
 
   mgsErroEmail(formControlName: string) {
-    let campoEmail: AbstractControl = this.formulario.get(formControlName);
+    const campoEmail: AbstractControl = this.getCampo(formControlName);
     if (campoEmail.errors) {
       if (campoEmail.getError('required')) { return 'Email obrigatorio'; }
       if (campoEmail.getError('email')) { return 'Email invalido'; }
       if (campoEmail.getError('notEqualsTo')) { return 'Emails não correspondem'; }
       if (campoEmail.getError('emailExistente')) { return 'Emails existente'; }
     }
-    if (campoEmail.status == 'PENDING') { return 'Verificando Email'; }
-    if (campoEmail.status == 'VALID') { return 'Email Válido'; }
+    if (campoEmail.status === 'PENDING') { return 'Verificando Email'; }
+    if (campoEmail.status === 'VALID') { return 'Email Válido'; }
   }
 
   msgErroCep() {
-    let campoCep: AbstractControl = this.formulario.get('endereco.cep');
+    const campoCep: AbstractControl = this.getCampo('endereco.cep');
     if (campoCep.hasError('required')) { return 'CEP obrigatorio'; }
     if (campoCep.hasError('cepInvalido')) { return 'CEP invalido'; }
   }
 
   OnCepBlur() {
-    // let cep = this.formulario.get('endereco.cep').value;
+    // let cep = this.getCampo('endereco.cep').value;
     // if (cep) {
     //   cep = cep.replace(/\D/g, '');
     //   const regExCepValido = /[0-9]{8}/;
@@ -161,11 +148,11 @@ export class DataFormComponent implements OnInit {
     // }
 
 
-    if (this.formulario.get('endereco.cep').valid) {
-      const cep = this.formulario.get('endereco.cep').value;
+    if (this.getCampo('endereco.cep').valid) {
+      const cep = this.getCampo('endereco.cep').value;
       this.cepService.consultaCep(cep).subscribe(resp => {
         this.popularEndereco(resp);
-      })
+      });
     }
 
   }
@@ -180,7 +167,7 @@ export class DataFormComponent implements OnInit {
         cidade: dados.localidade,
         estado: dados.uf
       }
-    })
+    });
   }
 
   resetarEndereco() {
@@ -194,17 +181,17 @@ export class DataFormComponent implements OnInit {
         estado: null,
         numero: null
       }
-    })
+    });
   }
 
 
   setarCargo() {
     const cargo = { nome: 'Dev', nivel: 'Pleno', desc: 'Dev Pl' };
-    this.formulario.get('cargo').setValue(cargo);
+    this.getCampo('cargo').setValue(cargo);
   }
 
   setarTecnologias() {
-    this.formulario.get('tecnologias').setValue(['ruby', 'java']);
+    this.getCampo('tecnologias').setValue(['ruby', 'java']);
   }
 
   compararCargos(obj1, obj2) {
@@ -213,19 +200,23 @@ export class DataFormComponent implements OnInit {
 
   buildFrameworks() {
     const values = this.frameworks.map(v => new FormControl(false));
-    return this.formBuilder.array(values, FormValidations.requiredMinCheckBox(1))
+    return this.formBuilder.array(values, FormValidations.requiredMinCheckBox(1));
   }
 
   msgErrorCep() {
-    const cepControl = this.formulario.get('endereco.cep');
-    if (cepControl.hasError('required')) { return 'CEP é obrigatório'; };
-    if (cepControl.hasError('cepInvalido')) { return 'CEP inválido'; };
+    const cepControl = this.getCampo('endereco.cep');
+    if (cepControl.hasError('required')) { return 'CEP é obrigatório'; }
+    if (cepControl.hasError('cepInvalido')) { return 'CEP inválido'; }
   }
 
   validarEmail(formControl: FormControl) {
     return this.verificaEmailService.verificaEmail(formControl.value).pipe(
       map(res => res ? { emailExistente: true } : null)
-    )
+    );
+  }
+
+  getCidades(idEstado: number) {
+    this.dropdownService.getCidades(idEstado).subscribe();
   }
 
 
@@ -250,15 +241,11 @@ export class DataFormComponent implements OnInit {
   // ngAfterContentInit() {
   //   console.log('data: ngAfterContentInit');
   // }
+  // tslint:disable-next-line:use-life-cycle-interface
   // ngAfterContentChecked() {
   //   console.log('data: ngAfterContentChecked');
+  //   console.log(this.formulario);
   // }
-
-  ngAfterContentChecked() {
-    // console.log(this.formulario.get('confirmarEmail'))
-    this.validarEmail
-  }
-
 
 
 }

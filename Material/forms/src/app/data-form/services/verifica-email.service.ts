@@ -17,7 +17,7 @@ export class VerificaEmailService {
       // tap(console.log),
       map((obj: { listaEmails: string }) => obj.listaEmails),
       // tap(console.log),
-      map((obj: { email: string }[] )=> obj.filter(e => e.email == email)),
+      map((obj: { email: string }[]) => obj.filter(e => e.email === email)),
       // tap(console.log),
       map(obj => obj.length > 0),
       // tap(console.log)

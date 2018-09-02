@@ -12,9 +12,9 @@ export class ConsultaCepService {
     if (cep) {
       cep = cep.replace(/\D/g, '');
       const regExCepValido = /[0-9]{8}/;
-      let cepValido = regExCepValido.test(cep);
+      const cepValido = regExCepValido.test(cep);
       if (cepValido) {
-        return this.http.get(`https://viacep.com.br/ws/${cep}/json`)
+        return this.http.get(`https://viacep.com.br/ws/${cep}/json`);
       }
     }
   }

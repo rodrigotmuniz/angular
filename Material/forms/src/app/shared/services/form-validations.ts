@@ -1,4 +1,4 @@
-import { FormArray, FormGroup } from "@angular/forms";
+import { FormArray, FormGroup } from '@angular/forms';
 
 export class FormValidations {
 
@@ -15,7 +15,7 @@ export class FormValidations {
     static cepValidator(formGroup: FormGroup) {
         const errorObj = { cepInvalido: true };
         const cep = formGroup.value;
-        if (!cep || cep == '') { return errorObj; }
+        if (!cep || cep === '') { return errorObj; }
         const regExCepValido = /^[0-9]{5}-?[0-9]{3}$/;
         return regExCepValido.test(cep) ? null : errorObj;
     }

@@ -18,12 +18,12 @@ import { InputFieldComponent } from './input-field/input-field.component';
     FormDebugComponent,
     CampoControlErroComponent,
     ErrorMsgComponent,
-    InputFieldComponent
+    InputFieldComponent,
   ],
   declarations: [
-    CampoControlErroComponent, 
-    ErrorMsgComponent, 
-    InputFieldComponent
+    CampoControlErroComponent,
+    ErrorMsgComponent,
+    InputFieldComponent,
   ],
   providers: [DropdownService]
 })

@@ -1,36 +1,37 @@
-import { Directive, HostBinding, Input, Renderer, ElementRef, Renderer2, ViewChild, Output, HostListener } from '@angular/core';
+import { Directive, HostBinding, Input, Renderer, ElementRef, Renderer2, DoCheck, OnInit } from '@angular/core';
 import { tokenKey } from '../../../node_modules/@angular/core/src/view';
 import { NgModel } from '../../../node_modules/@angular/forms';
 
 @Directive({
+  // tslint:disable-next-line:directive-selector
   selector: '[formValidation]'
 })
-export class FormValidationDirective {
-  
+export class FormValidationDirective implements OnInit, DoCheck {
+
   errorIcon;
   successIcon;
   errorMessage;
   errorMessageValue;
-  
+
   @Input() class;
   @Input() validationMessage;
   @Input() emptyMessage;
   @Input() formValidation;
   @Input() useIcon;
-  
+
   @HostBinding('class') classes;
-  
+
   constructor(
     private el: ElementRef,
     private renderer: Renderer2
   ) { }
-  
+
   ngOnInit() {
     this.initializeErrorMessage();
     this.initializeErrorMessageValue();
     this.initializeIcons();
   }
-  
+
   initializeErrorMessage() {
     this.errorMessage = this.renderer.createElement('div');
     this.renderer.addClass(this.errorMessage, 'help-block');
@@ -42,15 +43,15 @@ export class FormValidationDirective {
   initializeErrorMessageValue() {
     this.errorMessageValue = this.renderer.createText('Error Message');
   }
-  
+
   initializeIcons() {
     this.successIcon = this.initializeIcon('glyphicon-ok');
     this.errorIcon = this.initializeIcon('glyphicon-remove');
   }
 
   initializeIcon(glyphicon) {
-    if(this.useIcon) {
-      let icon = this.renderer.createElement('span');
+    if (this.useIcon) {
+      const icon = this.renderer.createElement('span');
       this.renderer.addClass(icon, 'glyphicon');
       this.renderer.addClass(icon, glyphicon);
       this.renderer.addClass(icon, 'form-control-feedback');
@@ -58,31 +59,29 @@ export class FormValidationDirective {
       return icon;
     }
   }
-  
+
   ngDoCheck() {
     this.classes = this.class ? this.class : '';
-    if(this.formValidation.invalid && this.formValidation.touched) {
+    if (this.formValidation.invalid && this.formValidation.touched) {
       this.classes += ' has-error has-feedback';
       this.renderErrorView();
-      
-      if (this.formValidation.value == '') {
+
+      if (this.formValidation.value === '') {
         this.renderer.setValue(this.errorMessageValue, this.emptyMessage);
-      }
-      else {
+      } else {
         this.renderer.setValue(this.errorMessageValue, this.validationMessage);
       }
-    }
-    else if (this.formValidation.touched) {
+    } else if (this.formValidation.touched) {
       this.classes += ' has-success has-feedback';
       this.renderSuccessView();
-    } 
+    }
   }
 
   renderErrorView() {
     this.renderer.appendChild(this.errorMessage, this.errorMessageValue);
     this.renderer.appendChild(this.el.nativeElement, this.errorMessage);
 
-    if(this.useIcon) {
+    if (this.useIcon) {
       this.renderer.appendChild(this.el.nativeElement, this.errorIcon);
     }
 
@@ -100,7 +99,7 @@ export class FormValidationDirective {
       this.renderer.removeChild(this.el.nativeElement, this.errorIcon);
     }
 
-    if(this.useIcon) {
+    if (this.useIcon) {
       this.renderer.appendChild(this.el.nativeElement, this.successIcon);
     }
   }

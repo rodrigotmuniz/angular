@@ -14,7 +14,7 @@ export class TemplateFormComponent implements OnInit {
   usuario = {
     nome: 'nome do usuario',
     email: 'usuario@email.com'
-  }
+  };
   cepMock = '31842070';
 
   onSubmit(form, nome, email) {
@@ -29,17 +29,17 @@ export class TemplateFormComponent implements OnInit {
     console.log(form.value.endere);
     cep = cep.replace(/\D/g, '');
     const regExCepValido = /[0-9]{8}/;
-    let cepValido = regExCepValido.test(cep);
+    const cepValido = regExCepValido.test(cep);
     if (cepValido) {
       this.cepService.consultaCep(cep).subscribe(resp => {
         this.popularEndereco(form, resp);
-      })
+      });
     }
 
   }
 
   popularEndereco(form, endereco) {
-    console.log(form)
+    console.log(form);
     form.form.patchValue({
       endereco: {
         cep: endereco.cep,
@@ -47,20 +47,20 @@ export class TemplateFormComponent implements OnInit {
         rua: endereco.logradouro,
         bairro: endereco.bairro,
         cidade: endereco.localidade,
-        estado:endereco.uf
+        estado: endereco.uf
       }
     });
   }
 
   onCepClick(formGroup: FormGroup) {
-    formGroup.patchValue({endereco: {cep: '31842070'}})
+    formGroup.patchValue({ endereco: { cep: '31842070' } });
   }
 
 
   constructor(private http: HttpClient, private cepService: ConsultaCepService) { }
 
   ngOnInit() {
-  //   console.log('template: ngOnInit');
+    //   console.log('template: ngOnInit');
   }
   // ngOnDestroy() {
   //   console.log('template: ngOnDestroy');
