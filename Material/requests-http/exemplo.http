@@ -1,0 +1,57 @@
+http://localhost:3000/cursos
+
+###
+http://localhost:3000/cursos/1
+
+###
+POST http://localhost:3000/cursos HTTP/1.1
+content-type: application/json
+
+{
+    "nome": "Java"
+}
+
+###
+PUT http://localhost:3000/cursos/2 HTTP/1.1
+content-type: application/json
+
+{
+    "id": 2,
+    "nome": "Java"
+}
+
+
+###
+DELETE http://localhost:3000/cursos/2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+###
+POST http://150.164.192.110:9080/SigtelWeb/api/login HTTP/1.1
+content-type: application/json
+
+
+{
+    "nome": "homologacao",
+    "senha": "123456"
+}
+
+###
+POST http://150.164.192.110:9080/SigtelWeb/api/pre-cadastro/paginado/linha-inicial/0/qtde-linhas/10 HTTP/1.1
+content-type: application/json
+Authorization: eyJ1c3VhcmlvIjoiTXlTZWNyZXQiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJIT01PTE9HQUNBTyIsImV4cCI6MTUzNjc2MzIxOH0.mouLv2TIv0Onqp6r2vx4_frEgzGEhimUzx_IQvZwYY9DtHcgr88eBq6_28Sab_KQqgPEW075U01i_mrLY6DCcQ
+
+{"endereco":{"municipio":{"uf":{"pais":{}}}},"statusPreCadastro":{}}
